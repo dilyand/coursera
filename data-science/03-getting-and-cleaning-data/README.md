@@ -243,3 +243,12 @@ names(labelledFilteredSet)
 ```
 
 ## Step 5: Create a tidy dataset with the average of each variable for each activity and each subject
+
+For this last step, we'll be using the `dplyr` package:
+
+```R
+if(!require("dplyr")) {
+  install.packages("dplyr")
+  library(dplyr)
+}
+```
