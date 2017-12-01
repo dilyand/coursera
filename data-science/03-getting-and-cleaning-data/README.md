@@ -20,6 +20,22 @@ You should create one R script called run_analysis.R that does the following.
 4. Appropriately labels the data set with descriptive variable names.
 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
+## Preparation
+
+First, let's download the *Human Activity Recognition Using Smartphones Dataset*:
+
+```R
+# This works on a Windows machine. You might need to use the appropriate method on another OS.
+
+fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+
+# Download the zip file in the current working directory
+download.file(fileUrl, destfile = "./samsung_dataset.zip")
+
+# Unzip the files in the current working directory
+unzip("./samsung_dataset.zip", exdir = getwd())
+```
+
 ## Step 1: Merge the training and test sets to create one data set
 
 According to the *Human Activity Recognition* team:
@@ -34,19 +50,11 @@ The two sets (test and training) live in the following files:
 We can check that the two sets (test and training) have the same number of columns:
 
 ```R
-if(!file.exists("./data/dilyand")) {
-  dir.create("./data/dilyand")
-}
+# Read in the test set
+testSet <- read.table("./UCI HAR Dataset/test/X_test.txt")
 
-fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-
-download.file(fileUrl, destfile = "./data/dilyand/hardata.zip") # add method = "curl" if on a Mac
-
-unzip("./data/dilyand/hardata.zip", exdir = "./data/dilyand")
-
-testSet <- read.table("./data/dilyand/UCI HAR Dataset/test/X_test.txt")
-
-trainingSet <- read.table("./data/dilyand/UCI HAR Dataset/train/X_train.txt")
+# Read in the training set
+trainingSet <- read.table("./UCI HAR Dataset/train/X_train.txt")
 
 # This should return TRUE if the two sets have the same number of columns
 ncol(testSet) == ncol(trainingSet)
@@ -84,7 +92,7 @@ We can verify that `features.txt` has a name for each column in the two datasets
 
 ```R
 # Read in the features list
-features <- read.table("./data/dilyand/UCI HAR Dataset/features.txt")
+features <- read.table("./UCI HAR Dataset/features.txt")
 
 # This should return TRUE
 (nrow(features) == ncol(testSet)) & (nrow(features) == ncol(trainingSet))
@@ -141,8 +149,8 @@ As a start, let's verify that these files have the same number of rows as the or
 
 ```R
 # Read in the label lists
-testLabels <- read.table("./data/dilyand/UCI HAR Dataset/test/y_test.txt")
-trainingLabels <- read.table("./data/dilyand/UCI HAR Dataset/train/y_train.txt")
+testLabels <- read.table("./UCI HAR Dataset/test/y_test.txt")
+trainingLabels <- read.table("./UCI HAR Dataset/train/y_train.txt")
 
 # Both of these should return TRUE
 nrow(testLabels) == nrow(testSet)
@@ -174,8 +182,8 @@ Before continuing, let's also add a column with the subject identifiers for each
 
 ```R
 # Read in the subject lists
-testSubjects <- read.table("./data/dilyand/UCI HAR Dataset/test/subject_test.txt")
-trainingSubjects <- read.table("./data/dilyand/UCI HAR Dataset/train/subject_train.txt")
+testSubjects <- read.table("./UCI HAR Dataset/test/subject_test.txt")
+trainingSubjects <- read.table("./UCI HAR Dataset/train/subject_train.txt")
 
 # Both of these should return TRUE
 nrow(testSubjects) == nrow(testSet)
@@ -197,7 +205,7 @@ Now back to the activity labels. We now have a dataset that has them, but these 
 
 ```R
 # Read in the activity names
-activityNames <- read.table("./data/dilyand/UCI HAR Dataset/activity_labels.txt")
+activityNames <- read.table("./UCI HAR Dataset/activity_labels.txt")
 
 # Match the filtered set to the activity names
 labelledFilteredSet <- merge(filteredSet, activityNames, by.x = "activityLabels", by.y = "V1")
@@ -220,7 +228,7 @@ head(labelledFilteredSet[1])
 
 ## Step 4: Label the dataset with descriptive variable names
 
-Our labelled filtered set now has 67 columns, but only two of them have descriptive names: the `activityLabels` and `subject` columns.
+Our labelled filtered set now has 68 columns, but only two of them have descriptive names: the `activityLabels` and `subject` columns.
 
 We can use the index from Step 2 to extract the desired column names from the features list and assign those names to the unnamed columns of the labelled filtered set:
 
@@ -233,3 +241,5 @@ Now each column has a descriptive name:
 ```R
 names(labelledFilteredSet)
 ```
+
+## Step 5: Create a tidy dataset with the average of each variable for each activity and each subject
