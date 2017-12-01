@@ -168,7 +168,32 @@ We can check that the first column in the filtered set is now indeed an activity
 head(filteredSet[1])
 ```
 
-But these labels are not yet descriptive. To make them so we need to use the activity names from `activity_labels.txt`:
+================================================================================
+
+Before continuing, let's also add a column with the subject identifiers for each record. We won't actually need it before Step 5. However, there are two reasons to add it now: a.) we can use the same mechanism as for adding the activity labels; b.) the `merge` function we use to add the descriptive activity names reorders the dataset: and we need the dataset to be in the original order so we can add the subject IDs.
+
+```R
+# Read in the subject lists
+testSubjects <- read.table("./data/dilyand/UCI HAR Dataset/test/subject_test.txt")
+trainingSubjects <- read.table("./data/dilyand/UCI HAR Dataset/train/subject_train.txt")
+
+# Both of these should return TRUE
+nrow(testSubjects) == nrow(testSet)
+nrow(trainingSubjects) == nrow(trainingSet)
+
+# Merge the subject sets, making sure to use the same order as when merging the test and training datasets
+mergedSubjects <- rbind(testSubjects, trainingSubjects)
+
+# Add a subject column to filteredSet
+filteredSet$subject <- mergedSubjects$V1
+
+# Make the subject column the first column in the table
+filteredSet <- filteredSet[ , c(ncol(filteredSet), 1:(ncol(filteredSet) - 1))]
+```
+
+================================================================================
+
+Now back to the activity labels. We now have a dataset that has them, but these labels are not yet descriptive. To make them so we need to use the activity names from `activity_labels.txt`:
 
 ```R
 # Read in the activity names
@@ -184,7 +209,7 @@ labelledFilteredSet$activityLabels <- labelledFilteredSet$V2.y
 labelledFilteredSet$V2.y <- NULL
 
 # Joining the tables renamed the second column (because both tables had a column called V2). Change the name back to the original name.
-names(labelledFilteredSet)[3] <- "V2"
+names(labelledFilteredSet)[4] <- "V2"
 ```
 
 Now we can verify that the first column in the labelled filtered set contains descriptive activity labels:
@@ -200,7 +225,7 @@ Our labelled filtered set now has 67 columns, but only one of them has a descrip
 We can use the index from Step 2 to extract the desired column names from the features list and assign those names to the unnamed columns of the labelled filtered set:
 
 ```R
-names(labelledFilteredSet)[-1] <- as.vector(features$V2[columnNamesIndex])
+names(labelledFilteredSet)[-c(1, 2)] <- as.vector(features$V2[columnNamesIndex])
 ```
 
 Now each column has a descriptive name:
