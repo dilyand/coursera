@@ -49,7 +49,7 @@ testSet <- read.table("./data/dilyand/UCI HAR Dataset/test/X_test.txt")
 trainingSet <- read.table("./data/dilyand/UCI HAR Dataset/train/X_train.txt")
 
 # This should return TRUE if the two sets have the same number of columns
-ncol(testSet) = ncol(trainingSet)
+ncol(testSet) == ncol(trainingSet)
 ```
 
 We can also confirm that the training set has ~70% of the observations:
@@ -83,6 +83,7 @@ According to the *Human Activity Recognition* `README`, there is a file that con
 We can verify that `features.txt` has a name for each column in the two datasets:
 
 ```R
+# Read in the features list
 features <- read.table("./data/dilyand/UCI HAR Dataset/features.txt")
 
 # This should return TRUE
@@ -111,12 +112,6 @@ stdColumnNamesIndex <- grep("std\\(\\)", features$V2)
 columnNamesIndex <- sort(as.numeric(c(meanColumnNamesIndex, stdColumnNamesIndex)))
 ```
 
-This index now let's us extract the desired column names from the features list:
-
-```R
-features$V2[columnNamesIndex]
-```
-
 We can now use this index to extract only the desired mean and standard deviation measurements:
 
 ```R
@@ -132,3 +127,84 @@ ncol(filteredSet) == length(columnNamesIndex)
 ```
 
 ## Step 3: Use descriptive activity names to name the activities in the data set
+
+The activity labels for the test and training sets are contained in the following two files:
+
+- `train/y_train.txt`: Training labels.
+- `test/y_test.txt`: Test labels.
+
+However, these labels are not descriptive. The actual names of the activities can be found in:
+
+- `activity_labels.txt`: Links the class labels with their activity name.
+
+As a start, let's verify that these files have the same number of rows as the original training and test sets (guaranteeing that there is an activity label for each record):
+
+```R
+# Read in the label lists
+testLabels <- read.table("./data/dilyand/UCI HAR Dataset/test/y_test.txt")
+trainingLabels <- read.table("./data/dilyand/UCI HAR Dataset/train/y_train.txt")
+
+# Both of these should return TRUE
+nrow(testLabels) == nrow(testSet)
+nrow(trainingLabels) == nrow(trainingSet)
+```
+
+We can merge the two label sets and then add the labels as a new column in the filtered merged set:
+
+```R
+# Merge the label sets, making sure to use the same order as when merging the test and training datasets
+mergedLabels <- rbind(testLabels, trainingLabels)
+
+# Add a label column to filteredSet
+filteredSet$activityLabels <- mergedLabels$V1
+
+# Make the label column the first column in the table
+filteredSet <- filteredSet[ , c(ncol(filteredSet), 1:(ncol(filteredSet) - 1))]
+```
+
+We can check that the first column in the filtered set is now indeed an activity label column:
+
+```R
+head(filteredSet[1])
+```
+
+But these labels are not yet descriptive. To make them so we need to use the activity names from `activity_labels.txt`:
+
+```R
+# Read in the activity names
+activityNames <- read.table("./data/dilyand/UCI HAR Dataset/activity_labels.txt")
+
+# Match the filtered set to the activity names
+labelledFilteredSet <- merge(filteredSet, activityNames, by.x = "activityLabels", by.y = "V1")
+
+# Replace the numeric labels with descriptive ones
+labelledFilteredSet$activityLabels <- labelledFilteredSet$V2.y
+
+# Drop the redundant column
+labelledFilteredSet$V2.y <- NULL
+
+# Joining the tables renamed the second column (because both tables had a column called V2). Change the name back to the original name.
+names(labelledFilteredSet)[3] <- "V2"
+```
+
+Now we can verify that the first column in the labelled filtered set contains descriptive activity labels:
+
+```R
+head(labelledFilteredSet[1])
+```
+
+## Step 4: Label the dataset with descriptive variable names
+
+Our labelled filtered set now has 67 columns, but only one of them has a descriptive name: the `activityLabels` column.
+
+We can use the index from Step 2 to extract the desired column names from the features list and assign those names to the unnamed columns of the labelled filtered set:
+
+```R
+names(labelledFilteredSet)[-1] <- as.vector(features$V2[columnNamesIndex])
+```
+
+Now each column has a descriptive name:
+
+```R
+names(labelledFilteredSet)
+```
