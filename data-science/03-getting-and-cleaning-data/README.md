@@ -208,7 +208,7 @@ labelledFilteredSet$activityLabels <- labelledFilteredSet$V2.y
 # Drop the redundant column
 labelledFilteredSet$V2.y <- NULL
 
-# Joining the tables renamed the second column (because both tables had a column called V2). Change the name back to the original name.
+# Joining the tables renamed a column (because both tables had a column called V2). Change the name back to the original name.
 names(labelledFilteredSet)[4] <- "V2"
 ```
 
@@ -220,7 +220,7 @@ head(labelledFilteredSet[1])
 
 ## Step 4: Label the dataset with descriptive variable names
 
-Our labelled filtered set now has 67 columns, but only one of them has a descriptive name: the `activityLabels` column.
+Our labelled filtered set now has 67 columns, but only two of them have descriptive names: the `activityLabels` and `subject` columns.
 
 We can use the index from Step 2 to extract the desired column names from the features list and assign those names to the unnamed columns of the labelled filtered set:
 
