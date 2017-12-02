@@ -144,3 +144,10 @@ tidySet <- groupedSet %>% summarize_all(mean, na.rm = TRUE)
 
 # Write the tidy dataset to a file in the current working directory.
 write.table(tidySet, file = "./tidyset.txt", row.names = FALSE)
+
+
+
+#################################
+
+# Print a message to the console
+print("This script has now created a file called 'tidyset.txt'. Look for it in the current working directory.")
