@@ -2,7 +2,7 @@
 
 This repository contains the following files:
 
-- `tidyset.txt`: a tidy dataset required as submission for the programming assignment for Week 4 of the `Getting and Cleaning Data` course.
+- `tidyset.txt`: a tidy dataset required as submission for the programming assignment for Week 4 of the *Getting and Cleaning Data* course.
 - `run_analysis.R`: an R script that creates `tidyset.txt`.
 - `CodeBook.md`: a description of the variables in `tidyset.txt`.
 - `README.md`: a description of the process of writing `run_analysis.R`
