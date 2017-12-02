@@ -288,7 +288,7 @@ Is this dataset 'tidy'? As discussed [here](https://thoughtfulbloke.wordpress.co
 
 (See: [Tidy Data by Hadley Wickham](http://vita.had.co.nz/papers/tidy-data.html))
 
-## Writing the data to file
+### Writing the data to file
 
 Finally, I save the tidy data set as a new file in the current working directory:
 
