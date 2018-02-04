@@ -34,6 +34,8 @@ scc <- tbl_df(readRDS("Source_Classification_Code.rds"))
 # Calculate the total emissions from all sources by year of data release.
 totalByYear <- nei %>% group_by(year) %>% summarize(total = sum(Emissions))
 
+# Transform the year column into factor.
+totalByYear$year <- as.factor(totalByYear$year)
 
 
 ################################################################################
