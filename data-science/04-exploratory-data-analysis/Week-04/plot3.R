@@ -32,7 +32,7 @@ scc <- tbl_df(readRDS("Source_Classification_Code.rds"))
 
 
 # Subset the data.
-nei <- nei %>% filter(year %in% c(1999, 2008))
+nei <- nei %>% filter(fips == "24510" & year %in% c(1999, 2008))
 
 # Calculate the total emissions from all sources by year and by type.
 totalByYearAndType <- nei %>% group_by(year, type) %>% summarize(total = sum(Emissions))
@@ -57,9 +57,13 @@ if(!require("scales")) {
 }
 
 
-# Plot the data and save it to a 480x480 .png file in the current working directory.
-png(file = "plot3.png", antialias = "none")
-ggplot(data = totalByYearAndType, aes(x = year, y = total, fill = type)) + geom_bar(stat = "identity") + facet_wrap(~ type) + labs(title = "Total PM2.5 emissions by type", x = "year", y = "total PM2.5 emissions, in tons") + scale_y_continuous(labels = comma)
+# Plot the data and save it to a 960x960 .png file in the current working directory.
+png(file = "plot3.png", width = 960, height = 960, antialias = "none")
+ggplot(data = totalByYearAndType, aes(x = year, y = total, fill = type)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ type) +
+  labs(title = "Total PM2.5 emissions by type in Baltimore, MD", x = "year", y = "total PM2.5 emissions, in tons") +
+  scale_y_continuous(labels = comma)
 dev.off()
 
 # Print a message to the console.
