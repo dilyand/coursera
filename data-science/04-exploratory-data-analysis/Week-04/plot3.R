@@ -40,6 +40,8 @@ totalByYearAndType <- nei %>% group_by(year, type) %>% summarize(total = sum(Emi
 # Transform the year column into factor.
 totalByYearAndType$year <- as.factor(totalByYearAndType$year)
 
+
+
 ################################################################################
 #
 #        CREATING THE PLOT
@@ -55,7 +57,6 @@ if(!require("scales")) {
   install.packages("scales")
   library(scales)
 }
-
 
 # Plot the data and save it to a 960x960 .png file in the current working directory.
 png(file = "plot3.png", width = 960, height = 960, antialias = "none")
