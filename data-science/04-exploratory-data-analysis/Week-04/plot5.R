@@ -34,14 +34,14 @@ scc <- tbl_df(readRDS("Source_Classification_Code.rds"))
 # Convert SCC column to character.
 scc$SCC <- as.character(scc$SCC)
 
-# Create an index of Source Classification Codes for mobile sources.
-# This excludes recreational equipment.
-index <- scc %>% filter(grepl("Mobile Sources", SCC.Level.One)) %>% select(SCC)
+# Create an index of Source Classification Codes for highway vehicles.
+# This excludes recreational equipment and off-road vehicles.
+index <- scc %>% filter(grepl("Highway Vehicles", SCC.Level.Two)) %>% select(SCC)
 
 # Subset the data.
 nei <- nei %>% filter(SCC %in% index[[1]] & year %in% c(1999, 2008) & fips == "24510")
 
-# Calculate the total emissions from all sources by year.
+# Calculate the total emissions by year.
 totalByYear <- nei %>% group_by(year) %>% summarize(total = sum(Emissions))
 
 # Transform the year column into factor.
@@ -69,7 +69,7 @@ if(!require("scales")) {
 png(file = "plot5.png", antialias = "none")
 ggplot(data = totalByYear, aes(x = year, y = total)) +
   geom_bar(stat = "identity") +
-  labs(title = "Total PM2.5 emissions from mobile sources in Baltimore, MD", x = "year", y = "total PM2.5 emissions, in tons") +
+  labs(title = "Total PM2.5 emissions from motor vehicles in Baltimore City, MD", x = "year", y = "total PM2.5 emissions, in tons") +
   scale_y_continuous(labels = comma)
 dev.off()
 
