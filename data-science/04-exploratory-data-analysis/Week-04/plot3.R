@@ -63,7 +63,7 @@ png(file = "plot3.png", width = 960, height = 960, antialias = "none")
 ggplot(data = totalByYearAndType, aes(x = year, y = total, fill = type)) +
   geom_bar(stat = "identity") +
   facet_wrap(~ type) +
-  labs(title = "Total PM2.5 emissions by type in Baltimore, MD", x = "year", y = "total PM2.5 emissions, in tons") +
+  labs(title = "Total PM2.5 emissions by type in Baltimore City, MD", x = "year", y = "total PM2.5 emissions, in tons") +
   scale_y_continuous(labels = comma)
 dev.off()
 
