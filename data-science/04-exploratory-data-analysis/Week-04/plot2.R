@@ -47,7 +47,7 @@ totalByYear$year <- as.factor(totalByYear$year)
 
 # Plot the data and save it to a 480x480 .png file in the current working directory.
 png(file = "plot2.png", antialias = "none")
-with(totalByYear, barplot(total, main = "Total PM2.5 emissions in Baltimore, MD", xlab = "year", ylab = "total PM2.5 emissions from all sources, in tons"))
+with(totalByYear, barplot(total, main = "Total PM2.5 emissions in Baltimore City, MD", xlab = "year", ylab = "total PM2.5 emissions from all sources, in tons"))
 axis(side = 1, at = totalByYear$year, labels = totalByYear$year)
 box()
 dev.off()
