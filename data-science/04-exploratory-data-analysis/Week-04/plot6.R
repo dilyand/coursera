@@ -41,7 +41,7 @@ index <- scc %>% filter(grepl("Highway Vehicles", SCC.Level.Two)) %>% select(SCC
 # Subset the data.
 nei <- nei %>% filter(SCC %in% index[[1]] & fips %in% c("24510", "06037"))
 
-# Calculate the total emissions from all sources by year.
+# Calculate the total emissions by county and year.
 totalByCountyAndYear <- nei %>% group_by(fips, year) %>% summarize(total = sum(Emissions))
 
 # Transform the fips and year columns into factors.
